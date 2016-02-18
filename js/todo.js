@@ -18,14 +18,13 @@ $(document).ready(function(){
 							name: this.newEntry
 						});
 
-						this.$http.post('/admin/todo/ajax/save', { data: { name: this.newEntry } },
-							function (data, status, request) { 
-								this.$notify(data.message);
+						this.$http.post('/admin/todo/ajax/save', { data: { name: this.newEntry } }).then(
+							function (data) { 
+								this.$notify(data.data.message);
 								this.newEntry = '';
-							}
-						).error(function (error) {
-							this.$notify(error, 'warning');
-							console.log(error);
+							}).catch(function (error) {
+							this.$notify(data.data.message, 'warning');
+							console.log(data);
 						});
 					}
 					else
@@ -36,17 +35,22 @@ $(document).ready(function(){
 				
 				remove: function(entry) 
 				{
-					this.$http.post('/admin/todo/ajax/delete', { data: { id : entry.id } }, 
-						function (data, status, request) {
-							this.$notify(data.message);
+					this.$http.post('/admin/todo/ajax/delete', { data: { id : entry.id } }).then(
+						function (data) {
+							this.$notify(data.data.message);
+							this.entries.$remove(entry);
+						}).catch(
+						function (data) {
+							this.$notify(data.data.message, 'warning');
+							console.log(data);
 					});
-					this.entries.$remove(entry);
+					
 				},
 				toggle: function(entry) 
 				{
 					entry.do = !entry.do;
 					console.log(entry);
-					this.$http.post('/admin/todo/ajax/toggle', { data: entry }, function (data) { this.$notify(data.message); });
+					this.$http.post('/admin/todo/ajax/toggle', { data: entry }).then(function (data) { this.$notify(data.data.message); }).catch(function (data) { this.$notify(data.data.message, 'warning'); });
 				},
 			}
 		});
