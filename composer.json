@@ -1,0 +1,10 @@
+{
+    "name": "pagekit/todo",
+    "version": "0.1",
+    "type": "pagekit-extension",
+    "title": "ToDo DB",
+    "extra": {
+        "icon": "icon.svg",
+		"scripts": "scripts.php"
+    }
+}
